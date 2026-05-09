@@ -1,0 +1,6 @@
+{
+  "name": "Multiplayer Retro Snake",
+  "description": "Collect pixels to dominate the blocky grid in this real-time multiplayer retro snake game.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
