@@ -6,14 +6,29 @@
 import { useGameStore } from '../store/gameStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Trophy } from 'lucide-react';
+import { useEffect } from 'react';
+import { audio } from '../lib/audio';
 
 export function UI() {
-  const { gameState, playerId, joinGame, countdown, startJoinCountdown } = useGameStore();
+  const { gameState, playerId, joinGame, countdown, startJoinCountdown, lastMilestone } = useGameStore();
 
   const player = playerId && gameState ? gameState.players[playerId] : null;
   const isAlive = player?.state === 'alive';
   const isDead = player?.state === 'dead';
   const isSpectating = !player || isDead;
+
+  // Sound triggering logic
+  useEffect(() => {
+    if (isAlive && player) {
+      const currentScore = Math.floor(player.score);
+      const milestone = Math.floor(currentScore / 10) * 10;
+      
+      if (milestone > 0 && milestone > lastMilestone && currentScore >= milestone) {
+        audio.playMilestone();
+        useGameStore.setState({ lastMilestone: milestone });
+      }
+    }
+  }, [player?.score, isAlive, lastMilestone]);
 
   const handleOpenNewTab = () => {
     window.open(window.location.href, '_blank');

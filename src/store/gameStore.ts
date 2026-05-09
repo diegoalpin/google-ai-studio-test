@@ -12,6 +12,7 @@ interface GameStore {
   gameState: GameState | null;
   playerId: string | null;
   countdown: number | null;
+  lastMilestone: number;
   connect: () => void;
   joinGame: () => void;
   startJoinCountdown: () => void;
@@ -27,6 +28,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   gameState: null,
   playerId: null,
   countdown: null,
+  lastMilestone: 0,
   connect: () => {
     if (get().socket) return;
     
@@ -74,6 +76,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   joinGame: () => {
     const { socket } = get();
     if (socket) {
+      set({ lastMilestone: 0 });
       socket.emit('join');
     }
   },
